@@ -51,6 +51,12 @@ ITEM_PIPELINES = {
     'scrapy_redis.pipelines.RedisPipeline': 300
 }
 
+# MogoDB settings
+MONGODB_SERVER = "localhost"
+MONGODB_PORT = 27017
+MONGODB_DB = "API_crawling"
+MONGODB_COLLECTION = "lolmatches"
+
 # The item pipeline serializes and stores the items in this redis key.
 REDIS_ITEMS_KEY = '%(spider)s:items'
 
