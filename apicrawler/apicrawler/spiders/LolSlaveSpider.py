@@ -11,7 +11,7 @@ class LolSlaveSpider(RedisSpider):
     name = 'lol_slave'
     redis_key = 'match_api:new_url'
 
-    APIkey = "RGAPI-942f086a-c63e-4839-b02e-902db4cdc0ca"
+    APIkey = "RGAPI-2cbb6dc2-0dc0-4400-a35a-4b2a50c2a657"
     matchAPI = "https://na1.api.riotgames.com/lol/match/v4/matches/"
     playerAPI = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/"
 
@@ -24,20 +24,20 @@ class LolSlaveSpider(RedisSpider):
         # match = it.parse_match_body(self, response.body)
         match = json.loads(response.body)
 
-        item = MatchItem()
-        item['match_id'] = match['gameId']
-        # TODO
-        item['match_details'] = match
+        # item = MatchItem()
+        # item['match_id'] = match['gameId']
+        # item['match_details'] = json.dumps(match)
 
         '''Save the match item'''
         print("MatchID: {}".format(match['gameId']))
+        yield match
 
         '''trace players of a match'''
         player_list = match['participantIdentities']
 
-        for item in player_list:
+        for player in player_list:
 
-            player_id = item['player']['accountId']
+            player_id = player['player']['accountId']
             time.sleep(1)
             # build player api request
             player_api_request = self.playerAPI + str(player_id) + "?endIndex={}".format(self.end_index) + "&api_key={}".format(self.APIkey)
@@ -48,7 +48,7 @@ class LolSlaveSpider(RedisSpider):
             try:
 
                 rt.filter_API(redis, player_api_request, "player_api:new_url")
-                print("For Player: %s, new player_requests sent back to master Queue", player_id)
+                print("For Player: %s, new player_requests sent back to master Queue" % player_id)
 
             except Exception as e:
 
@@ -56,7 +56,7 @@ class LolSlaveSpider(RedisSpider):
                 print(e)
                 pass
 
-        yield item
+
 
 class MatchItem(Item):
 

@@ -48,7 +48,8 @@ SCHEDULER_IDLE_BEFORE_CLOSE = 10
 
 # Store scraped item in redis for post-processing.
 ITEM_PIPELINES = {
-    'scrapy_redis.pipelines.RedisPipeline': 300
+    'scrapy_redis.pipelines.RedisPipeline': 300,
+    'apicrawler.pipelines.MongoDBPipeline': 400
 }
 
 # MogoDB settings

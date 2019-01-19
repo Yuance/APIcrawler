@@ -27,9 +27,9 @@ class MongoDBPipeline(object):
         self.collection = db[settings['MONGODB_COLLECTION']]
 
     def process_item(self, item, spider):
-        for data in item:
-            if not data:
-                raise DropItem("Missing {0}!".format(data))
+        # for data in item:
+        #     if not data:
+        #         raise DropItem("Missing {0}!".format(data))
 
         self.collection.insert(dict(item))
         log.msg("Match added to MongoDB database!", level=log.DEBUG, spider=spider)
