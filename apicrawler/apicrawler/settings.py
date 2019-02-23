@@ -53,7 +53,7 @@ ITEM_PIPELINES = {
 }
 
 # MogoDB settings
-MONGODB_SERVER = "localhost"
+MONGODB_SERVER = "db"
 MONGODB_PORT = 27017
 MONGODB_DB = "API_crawling"
 MONGODB_COLLECTION = "lolmatches"
@@ -66,7 +66,7 @@ REDIS_ITEMS_KEY = '%(spider)s:items'
 REDIS_ITEMS_SERIALIZER = 'json.dumps'
 
 # Specify the host and port to use when connecting to Redis (optional).
-REDIS_HOST = 'localhost'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 
 # Specify the full Redis URL for connecting (optional).
