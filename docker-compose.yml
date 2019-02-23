@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: mongodb
+    ports:
+      - "27017:27017"
+  redis:
+    image: redis:2.8
+    command: redis-server
+    ports:
+      - "6379:6379"
+  web:
+    build: .
+    # command: "python -c \"while True: pass\""
+#    entrypoint: "start_django.sh"
+#    env_file:
+#      - default.env
+    volumes:
+      - ./apicrawler
+      - ./apicrawler_slave
+#    ports:
+#      - "8000:8000"
+    depends_on:
+      - db
+      - redis
