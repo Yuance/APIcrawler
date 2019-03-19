@@ -3,17 +3,17 @@ version: '3'
 services:
   db:
     image: mongo
-#    ports:
-#      - "27017:27017"
-    expose:
-      - "27017"
+    ports:
+      - "27017:27017"
+#    expose:
+#      - "27017"
   redis:
     image: redis
     command: redis-server
-#    ports:
-#      - "6379:6379"
-    expose:
-      - "6379"
+    ports:
+      - "6379:6379"
+#    expose:
+#      - "6379"
   master:
     build: .
 #    command: "python -c \"while True: pass\""
@@ -22,9 +22,30 @@ services:
 #      - default.env
     volumes:
       - ./apicrawler
-      - ./apicrawler_slave
 #    ports:
 #      - "8000:8000"
     depends_on:
       - db
       - redis
+
+  slave1:
+    build: .
+    entrypoint: "start_slave1.sh"
+    volumes:
+      - ./apicrawler_slave1
+
+    depends_on:
+      - db
+      - redis
+      - master
+
+  slave2:
+    build: .
+    entrypoint: "start_slave2.sh"
+    volumes:
+      - ./apicrawler_slave2
+
+    depends_on:
+      - db
+      - redis
+      - master

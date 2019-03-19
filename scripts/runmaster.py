@@ -1,3 +1,3 @@
 from scrapy import cmdline
 
-cmdline.execute("scrapy crawl -a key=RGAPI-7ab8d282-2b62-40bd-9809-214690eb41b3 lol_master".split())
+cmdline.execute("scrapy crawl -a key=RGAPI-f79e026a-3484-4273-85b1-9dcb9daa7da7 lol_master".split())
