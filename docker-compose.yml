@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  db:
+  mongos1:
     image: mongo
     ports:
       - "27017:27017"
@@ -9,43 +9,47 @@ services:
 #      - "27017"
   redis:
     image: redis
-    command: redis-server
+    command: redis-server /usr/local/etc/redis/redis.conf --protected-mode no
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"
-#    expose:
-#      - "6379"
+
   master:
-    build: .
+    image: yuance/apicrawler:latest
 #    command: "python -c \"while True: pass\""
     entrypoint: "start_master.sh"
-#    env_file:
-#      - default.env
     volumes:
-      - ./apicrawler
-#    ports:
-#      - "8000:8000"
+      - "./apicrawler:/App/apicrawler"
+      - "./scripts:/App/apicrawler/scripts"
+#      - "./start_master.sh:/App/start_master.sh"
+      - "./settings.py:/App/apicrawler/apicrawler/settings.py"
     depends_on:
-      - db
+      - mongos1
       - redis
 
   slave1:
-    build: .
+    image: yuance/apicrawler:latest
     entrypoint: "start_slave1.sh"
     volumes:
-      - ./apicrawler_slave1
-
+      - "./apicrawler:/App/apicrawler"
+      - "./scripts:/App/apicrawler/scripts"
+#      - "./start_slave1.sh:/App/start_slave1.sh"
+      - "./settings.py:/App/apicrawler/apicrawler/settings.py"
     depends_on:
-      - db
+      - mongos1
       - redis
       - master
-
-  slave2:
-    build: .
-    entrypoint: "start_slave2.sh"
-    volumes:
-      - ./apicrawler_slave2
-
-    depends_on:
-      - db
-      - redis
-      - master
+#
+#  slave2:
+#    image: yuance/apicrawler:latest
+#    entrypoint: "start_slave1.sh"
+#    volumes:
+#      - "./apicrawler:/App/apicrawler"
+#      - "./scripts:/App/apicrawler/scripts"
+#      - "./settings.py:/App/apicrawler/apicrawler/settings.py"
+#
+#    depends_on:
+#      - mongos1
+#      - redis
+#      - master

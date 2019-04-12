@@ -1,3 +1,3 @@
 from scrapy import cmdline
-
-cmdline.execute("scrapy crawl -a key=RGAPI-f79e026a-3484-4273-85b1-9dcb9daa7da7 lol_slave".split())
+from apicrawler import settings
+cmdline.execute("scrapy crawl -a key={} lol_slave".format(settings.API_KEY).split())

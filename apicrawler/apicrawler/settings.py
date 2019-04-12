@@ -8,7 +8,7 @@
 #     https://doc.scrapy.org/en/latest/topics/settings.html
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+API_KEY = 'RGAPI-6c7323a0-0da9-4065-8199-df17c181f569'
 BOT_NAME = 'apicrawler'
 
 SPIDER_MODULES = ['apicrawler.spiders']

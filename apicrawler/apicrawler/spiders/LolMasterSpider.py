@@ -3,8 +3,9 @@ import json
 from scrapy_redis.spiders import RedisSpider
 from redis import Redis
 import time
+from apicrawler import settings
 from apicrawler.loader import redistools as rt
-
+from scrapy import log
 
 
 class LolMasterSpider(RedisSpider):
@@ -33,11 +34,11 @@ class LolMasterSpider(RedisSpider):
 
     def parse(self, response):
 
-        time.sleep(1)
+        time.sleep(3)
         match_list = json.loads(response.body)
         match_list = match_list['matches']
 
-        redis = Redis()
+        redis = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
         for match in match_list:
             match_id = match['gameId']
 
@@ -46,11 +47,11 @@ class LolMasterSpider(RedisSpider):
             '''Put new matchAPI requests into Redis Queue, with key match_api:start_urls'''
             try:
                 rt.filter_API(redis, match_api_request, "match_api:new_url")
-                print("new match:%s requests has been added to queue" % match_id)
+                log.msg("new match:%s requests has been added to queue" % match_id)
 
             except Exception as e:
-                '''print the exception'''
-                print(e)
+                '''log.msg the exception'''
+                log.msg(e)
                 pass
 
 

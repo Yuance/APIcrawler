@@ -3,7 +3,8 @@ from scrapy_redis.spiders import  RedisSpider, Spider
 from scrapy.item import Field, Item
 from redis import Redis
 import time
-import scrapy
+from scrapy import log
+from apicrawler import settings
 import json
 
 class LolSlaveSpider(RedisSpider):
@@ -17,7 +18,7 @@ class LolSlaveSpider(RedisSpider):
 
 
     allowed_domains = ["na1.api.riotgames.com"]
-    end_index = 1
+    end_index = 2
 
     def __init__(self, *args, **kwargs):
         domain = kwargs.pop('domain', '')
@@ -41,7 +42,7 @@ class LolSlaveSpider(RedisSpider):
         # item['match_details'] = json.dumps(match)
 
         '''Save the match item'''
-        print("MatchID: {}".format(match['gameId']))
+        log.msg("MatchID: {}".format(match['gameId']), level=log.DEBUG)
         yield match
 
         '''trace players of a match'''
@@ -50,22 +51,22 @@ class LolSlaveSpider(RedisSpider):
         for player in player_list:
 
             player_id = player['player']['accountId']
-            time.sleep(1)
+            time.sleep(3)
             # build player api request
             player_api_request = self.playerAPI + str(player_id) + "?endIndex={}".format(self.end_index) + "&"
 
             '''Put new matchAPI requests into Redis Queue, with key match_api:start_urls'''
-            redis = Redis()
+            redis = Redis(host=settings.REDIS_HOST,port=settings.REDIS_PORT)
 
             try:
 
                 rt.filter_API(redis, player_api_request, "player_api:new_url")
-                print("For Player: %s, new player_requests sent back to master Queue" % player_id)
+                log.msg("For Player: %s, new player_requests sent back to master Queue" % player_id, level=log.DEBUG)
 
             except Exception as e:
 
                 '''print the exception'''
-                print(e)
+                log.err(e)
                 pass
 
 
