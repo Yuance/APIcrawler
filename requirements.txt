@@ -39,7 +39,7 @@ redis==3.0.1
 regex==2018.7.11
 requests==2.20.0
 s3transfer==0.1.13
-Scrapy==1.5.0
+Scrapy==2.6.1
 scrapy-redis==0.6.8
 service-identity==17.0.0
 six==1.11.0
